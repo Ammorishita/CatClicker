@@ -40,7 +40,9 @@ var octopus = {
 		model.currentcat = cat;
 	},
     clickCounter: function() {
-	},
+    	model.currentcat.clicks++;
+    	viewPicture.render();
+	}
 };
 
 var viewlist = {
@@ -57,6 +59,14 @@ var viewlist = {
 		elem = document.createElement('li');
 		elem.textContent = cat.name;
 		this.catListElem.appendChild(elem);
+
+        elem.addEventListener('click', (function(catCopy) {
+            return function() {
+                octopus.setCurrentCat(catCopy);
+                viewPicture.render();
+            };
+        })(cat));
+
 		};
 	}
 };
@@ -66,11 +76,13 @@ var viewPicture = {
 		this.catPicture = document.getElementById('catimage');
 		this.clicks = document.getElementById('clicks');
 		this.catName = document.getElementById('name');
+		this.catPicture.addEventListener('click', function() {
+			octopus.clickCounter();
+		})
 		this.render();
 	},
 	render : function() {
 		var currentcat = octopus.getCurrentCat();
-		console.log(currentcat);
 		this.catPicture.src = currentcat.imgsrc;
 		this.clicks.textContent = currentcat.clicks;
 		this.catName.textContent = currentcat.name;
